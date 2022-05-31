@@ -61,9 +61,14 @@ workflows:
       #     requires: [build]
       # - upload-docker:
       #     requires: [test]
-      - aws-ecr/build-and-push-image:
-          name: build-and-push-image-ecr
-          registry-id: AWS_ECR_REGISTRY_ID
-          region: ${AWS_DEFAULT_REGION}
-          repo: capstone_app
-          tag: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - aws-ecr/build-and-push-image:
+      #     name: build-and-push-image-ecr
+      #     registry-id: AWS_ECR_REGISTRY_ID
+      #     region: ${AWS_DEFAULT_REGION}
+      #     repo: capstone_app
+      #     tag: ${CIRCLE_WORKFLOW_ID:0:7}
+      - aws-eks/create-cluster:
+          cluster-name: eks-cluster-deployment-${CIRCLE_WORKFLOW_ID:0:7}
+          aws-region: ${AWS_DEFAULT_REGION}
+          # requires:
+          #   - build-and-push-image-ecr
