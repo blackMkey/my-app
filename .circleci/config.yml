@@ -83,7 +83,6 @@ workflows:
       - aws-eks/create-cluster:
           cluster-name: eks-deployment-${CIRCLE_WORKFLOW_ID:0:7}
           aws-region: $AWS_DEFAULT_REGION
-          zones: "${AWS_DEFAULT_REGION}a, ${AWS_DEFAULT_REGION}b, ${AWS_DEFAULT_REGION}c, ${AWS_DEFAULT_REGION}d"
           # requires:
           #   - build-and-push-image-ecr
       # - deploy-application:
