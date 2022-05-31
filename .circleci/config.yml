@@ -57,15 +57,16 @@ jobs:
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: eks-deployment-6ea2263
+          # cluster-name: eks-deployment-${CIRCLE_WORKFLOW_ID:0:7}
           install-kubectl: true
           aws-region: ${AWS_DEFAULT_REGION}
       - kubernetes/create-or-update-resource:
           resource-file-path: "deployments/deployment.yml"
           get-rollout-status: true
           resource-name: deployment/capstone
-      - kubernetes/create-or-update-resource:
-          resource-file-path: "deployments/deployment.yml"
+      # - kubernetes/create-or-update-resource:
+      #     resource-file-path: "deployments/deployment.yml"
 workflows:
   capstone-workflow:
     jobs:
@@ -80,11 +81,11 @@ workflows:
       #     region: ${AWS_DEFAULT_REGION}
       #     repo: capstone_app
       #     tag: ${CIRCLE_WORKFLOW_ID:0:7}
-      - aws-eks/create-cluster:
-          cluster-name: eks-deployment-${CIRCLE_WORKFLOW_ID:0:7}
-          aws-region: $AWS_DEFAULT_REGION
-          # requires:
-          #   - build-and-push-image-ecr
-      # - deploy-application:
+      # - aws-eks/create-cluster:
+      #     cluster-name: eks-deployment-${CIRCLE_WORKFLOW_ID:0:7}
+      #     aws-region: $AWS_DEFAULT_REGION
+      #     requires:
+      #       - build-and-push-image-ecr
+      - deploy-application
       #     requires:
       #       - aws-eks/create-cluster
