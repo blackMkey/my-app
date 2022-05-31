@@ -56,3 +56,5 @@ workflows:
       - build
       - test:
           requires: [build]
+      - upload-docker:
+          requires: [test]
