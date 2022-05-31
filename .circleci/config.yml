@@ -63,7 +63,7 @@ workflows:
       #     requires: [test]
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-ecr
-          registry-id: 193429901127
+          registry-id: AWS_ECR_REGISTRY_ID
           region: AWS_DEFAULT_REGION
           repo: capstone_app
           path: ~/project/
