@@ -54,14 +54,14 @@ jobs:
             docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
 
 workflows:
-  say-hello-workflow:
+  capstone-workflow:
     jobs:
       # - build
       # - test:
       #     requires: [build]
       # - upload-docker:
       #     requires: [test]
-      - aws-ecr/build_and_push_image:
+      - aws-ecr/build-and-push-image:
           name: build-and-push-image-ecr
           account-url: ${AWS_ECR_URL}
           region: ${AWS_DEFAULT_REGION}
