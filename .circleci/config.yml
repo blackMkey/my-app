@@ -1,7 +1,10 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
+orbs:
+  aws-eks: circleci/aws-eks@<<pipeline.parameters.dev-orb-version>>
+  kubernetes: circleci/kubernetes@1.3
+  aws-ecr: circleci/aws-ecr@8.1.2
 jobs:
   build:
     docker:
@@ -53,8 +56,16 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - build
-      - test:
-          requires: [build]
-      - upload-docker:
-          requires: [test]
+      # - build
+      # - test:
+      #     requires: [build]
+      # - upload-docker:
+      #     requires: [test]
+      - aws-ecr/build_and_push_image:
+          name: build-and-push-image-ecr
+          account-url: ${AWS_ECR_URL}
+          region: ${AWS_DEFAULT_REGION}
+          repo: capstone_app
+          dockerfile: ~/project/Dockerfile
+          path: ~/project/
+          tag: ${CIRCLE_WORKFLOW_ID:0:7}
