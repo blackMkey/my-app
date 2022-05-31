@@ -86,6 +86,6 @@ workflows:
           zones: "${AWS_DEFAULT_REGION}a, ${AWS_DEFAULT_REGION}b, ${AWS_DEFAULT_REGION}c, ${AWS_DEFAULT_REGION}d"
           # requires:
           #   - build-and-push-image-ecr
-      - deploy-application:
-          requires:
-            - aws-eks/create-cluster
+      # - deploy-application:
+      #     requires:
+      #       - aws-eks/create-cluster
