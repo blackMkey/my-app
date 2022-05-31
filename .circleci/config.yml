@@ -66,5 +66,4 @@ workflows:
           registry-id: AWS_ECR_REGISTRY_ID
           region: ${AWS_DEFAULT_REGION}
           repo: capstone_app
-          path: ~/project/
           tag: ${CIRCLE_WORKFLOW_ID:0:7}
