@@ -70,7 +70,7 @@ jobs:
           description: |
             AWS region
           type: string
-          default: "us-west-2"
+          default: "us-east-1"
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
@@ -83,6 +83,29 @@ jobs:
           resource-name: deployment/capstone
       - kubernetes/create-or-update-resource:
           resource-file-path: "deployments/deployment.yml"
+
+  test-application:
+        executor: aws-eks/python3
+        parameters:
+          cluster-name:
+            description: |
+              Name of the EKS cluster
+            type: string
+          aws-region:
+            description: |
+              AWS region
+            type: string
+            default: "us-east-1"
+        steps:
+          - aws-eks/update-kubeconfig-with-authenticator:
+              cluster-name: << parameters.cluster-name >>
+              install-kubectl: true
+              aws-region: << parameters.aws-region >>
+          - run:
+              name: Wait for service to be ready
+              command: |
+                kubectl get pods
+                kubectl get services
 workflows:
   capstone-workflow:
     jobs:
@@ -110,3 +133,8 @@ workflows:
           docker-image-name: "${AWS_ECR_REGISTRY_ID}.dkr.ecr.us-east-1.amazonaws.com/capstone_app:${CIRCLE_WORKFLOW_ID:0:7}"
           requires:
             - aws-eks/create-cluster
+      - test-application:
+          cluster-name: eks-deployment-${CIRCLE_WORKFLOW_ID:0:7}
+          aws-region: $AWS_DEFAULT_REGION
+          requires:
+            - deploy-application
