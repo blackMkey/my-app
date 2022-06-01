@@ -22,16 +22,20 @@ jobs:
           key: nodeModules
   #---------------------------------------------------------------------------------------------
   #---------------------------------------------------------------------------------------------
-  test:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [nodeModules]
-      - run: |
-          npm install
-          npm run test 
+  run-lint:
+      docker:
+        - image: circleci/node:13.8.0
+      steps:
+        - checkout
+        - run:
+            name: install dependencies
+            command: |
+              sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+              sudo chmod +x /bin/hadolint
+        - run:
+            name: Run Lint
+            command: |
+              hadolint Dockerfile
   #---------------------------------------------------------------------------------------------
   #---------------------------------------------------------------------------------------------
   upload-docker:
@@ -111,14 +115,14 @@ workflows:
   capstone-workflow:
     jobs:
       - build
-      - test:
+      - run-lint:
           requires: [build]
+      - upload-docker:
+          requires: [test]
           filters:
             branches:
               only:
                 - master
-      - upload-docker:
-          requires: [test]
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-ecr
           registry-id: AWS_ECR_REGISTRY_ID

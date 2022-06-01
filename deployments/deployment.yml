@@ -1,26 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capstone
+  creationTimestamp: null
   labels:
-    app: capstone
+    app: nginx-webapp
+  name: nginx-webapp
 spec:
+  replicas: 5
   selector:
     matchLabels:
-      app: capstone
-  replicas: 2
+      app: nginx-webapp
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: capstone
+        app: nginx-webapp
     spec:
       containers:
-      - name: capstone
-        image: 193429901127.dkr.ecr.us-east-1.amazonaws.com/capstone_app:v1
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
+      - image: 193429901127.dkr.ecr.us-east-1.amazonaws.com/capstone_app:v1
+        name: webapp
+        imagePullPolicy: Always
+        resources: {}
         ports:
-          - containerPort: 3000
-            hostPort: 3000
+          - containerPort: 80 
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-webapp
+  labels:
+    run: nginx-webapp
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx-webapp
+  type: LoadBalancer
