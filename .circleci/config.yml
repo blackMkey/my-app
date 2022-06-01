@@ -118,7 +118,7 @@ workflows:
       - run-lint:
           requires: [build]
       - upload-docker:
-          requires: [test]
+          requires: [run-lint]
           filters:
             branches:
               only:
