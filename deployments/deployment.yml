@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: capstone
-        image: blackmkey/my-app:latest
+        image: 193429901127.dkr.ecr.us-east-1.amazonaws.com/capstone_app:v1
         resources:
           requests:
             cpu: 100m
