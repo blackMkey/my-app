@@ -6,22 +6,6 @@ orbs:
   kubernetes: circleci/kubernetes@1.3
   aws-ecr: circleci/aws-ecr@8.1.2
 jobs:
-  build:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [nodeModules]
-      - run:
-          name: Build App
-          command: |
-            npm install
-      - save_cache:
-          paths: [node_modules]
-          key: nodeModules
-  #---------------------------------------------------------------------------------------------
-  #---------------------------------------------------------------------------------------------
   run-lint:
       docker:
         - image: circleci/node:13.8.0
@@ -36,7 +20,7 @@ jobs:
             name: Run Lint
             command: |
               ls
-              hadolint Dockerfile
+              hadolint Dockerfile --ignore DL3003 
   #---------------------------------------------------------------------------------------------
   #---------------------------------------------------------------------------------------------
   upload-docker:
@@ -115,9 +99,7 @@ jobs:
 workflows:
   capstone-workflow:
     jobs:
-      - build
-      - run-lint:
-          requires: [build]
+      - run-lint
       - upload-docker:
           requires: [run-lint]
           filters:
